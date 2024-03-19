@@ -39,6 +39,9 @@
     <ApplicationIcon>DSG_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="InTheHand.Net.Personal">
+      <HintPath>..\..\BtnCall_MainLabel_Program_src\BtnCall_MainLabel_Program\bin\Release\InTheHand.Net.Personal.dll</HintPath>
+    </Reference>
     <Reference Include="LibUsbDotNet">
       <HintPath>..\..\..\..\..\..\..\Program Files\LibUsbDotNet\LibUsbDotNet.dll</HintPath>
     </Reference>

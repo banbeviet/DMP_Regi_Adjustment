@@ -20,6 +20,11 @@ using System.Threading;
 using System.Drawing.Printing;
 
 
+using InTheHand.Net;
+using InTheHand.Net.Sockets;
+using InTheHand.Net.Bluetooth;
+using System.Net.Sockets;
+
 namespace DMP_Regi_Adjustment_Program
 {
 
@@ -62,17 +67,21 @@ namespace DMP_Regi_Adjustment_Program
         public static IDeviceNotifier UsbDeviceNotifier = DeviceNotifier.OpenDeviceNotifier();
 
 
-        Process processDbgMon;
+        Process processDbgMon, readingProcess;
         Thread thread;
 
         PrinterStatus sPrinterStatus;
 
         SQLiteManager db;
-
+        string RemainedMedia = "";
+        String bluetoothError = null;
         Boolean isManufacturingReset = false;
         public Form1()
         {
             InitializeComponent();
+            //enable_works();
+
+            //Photo_groupbox.Enabled = false;
 
             ProcessStartInfo startInfo = new ProcessStartInfo("taskkill");
             startInfo.Arguments = "/im dbgmon.exe /f";
@@ -85,6 +94,32 @@ namespace DMP_Regi_Adjustment_Program
             processDbgMon.StartInfo.CreateNoWindow = false;
             processDbgMon.StartInfo.UseShellExecute = false;
 
+            foreach (string fileName in Directory.GetFiles(Application.StartupPath+ "\\dbgmon", "*.log"))
+            {
+                try
+                {
+                    File.Delete(fileName);
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+
+            readingProcess = new Process();
+            readingProcess.StartInfo = new ProcessStartInfo
+            {
+                FileName = Application.StartupPath + "\\dbgmon\\dbgmon.exe",
+                Arguments = "read.txt",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            //readingProcess.StartInfo.FileName = Application.StartupPath + "\\dbgmon\\dbgmon.exe";
+            //readingProcess.StartInfo.Arguments = "read.txt result.txt";
+            //readingProcess.StartInfo.CreateNoWindow = true;
+            //readingProcess.StartInfo.UseShellExecute = false;
+            readingProcess.Exited += readingProcess_Exited;
+
             UsbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent; // 이벤트 핸들러 추가
             UsbDeviceNotifier.Enabled = true;  // 장치인식하는 걸 안하게 하는거!!
             UsbDevice.ForceLibUsbWinBack = true;
@@ -95,6 +130,44 @@ namespace DMP_Regi_Adjustment_Program
             CreateTheLog_csv();
 
             thread.Start();
+        }
+
+        void readingProcess_Exited(object sender, EventArgs e)
+        {
+            String btMac = null;
+
+            try
+            {
+                using (StreamReader reader = new StreamReader(new FileStream("dbgmon\\ds_AppManage.log", FileMode.Open)))
+                {
+                    Char[] delimeterChars = { ' ', '=', ',', '\t', '\"', '%', '(', ')', '|' };
+                    String[] strArray = null;
+
+                    while (!reader.EndOfStream)
+                    {
+                        strArray = reader.ReadLine().Split(delimeterChars, StringSplitOptions.RemoveEmptyEntries);
+
+                        try
+                        {
+                            for (Int32 i = 0; i < strArray.Length; i++)
+                            {
+                                if (strArray[i].Equals("[BT]"))
+                                {
+                                    btMac = strArray[i + 1];
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void OnDeviceNotifyEvent(object sender, DeviceNotifyEventArgs e)
@@ -335,29 +408,29 @@ namespace DMP_Regi_Adjustment_Program
             if (sPrinterStatus == PrinterStatus.USB_CONNECTED_READY) { 
             
 
-            processDbgMon.StartInfo.FileName = ".\\dbgmon\\PrintNail.bat";
-            processDbgMon.StartInfo.UseShellExecute = false;
-            processDbgMon.StartInfo.CreateNoWindow = true;
-            DBGMonStatus_label.Text = "Print Nail...";
-            processDbgMon.Start();
-            while (!processDbgMon.HasExited)
-            {
-                if (sPrinterStatus == PrinterStatus.USB_DISCONNECTED)
+                processDbgMon.StartInfo.FileName = ".\\dbgmon\\PrintNail.bat";
+                processDbgMon.StartInfo.UseShellExecute = false;
+                processDbgMon.StartInfo.CreateNoWindow = true;
+                DBGMonStatus_label.Text = "Print Nail...";
+                processDbgMon.Start();
+                while (!processDbgMon.HasExited)
                 {
-                    try
+                    if (sPrinterStatus == PrinterStatus.USB_DISCONNECTED)
                     {
-                        processDbgMon.Kill();
-                        processDbgMon.Close();
+                        try
+                        {
+                            processDbgMon.Kill();
+                            processDbgMon.Close();
+                        }
+                        catch
+                        {
+                            Debug.WriteLine("KillProcess error catch");
+                        }
+                        break;
                     }
-                    catch
-                    {
-                        Debug.WriteLine("KillProcess error catch");
-                    }
-                    break;
                 }
-            }
-            DBGMonStatus_label.Text = "";
-            sPrinterStatus = PrinterStatus.USB_CONNECTED_READY;
+                DBGMonStatus_label.Text = "";
+                sPrinterStatus = PrinterStatus.USB_CONNECTED_READY;
             }
         }
 
@@ -538,6 +611,307 @@ namespace DMP_Regi_Adjustment_Program
 
         }
 
+        private void BTPrintPhoto_button_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BTPrintNail_button_Click(object sender, EventArgs e)
+        {
+
+            readingProcess.EnableRaisingEvents = true;
+            readingProcess.Start();
+        }
+
+        private void Nail_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbx_Nail.Checked)
+            {
+                cbx_Photo.Checked = false;
+                EnableNail();
+                //Update();
+            }
+            else
+            {
+                DisableNail();
+            }
+        }
+        private void cbx_Photo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbx_Photo.Checked)
+            {
+                cbx_Nail.Checked = false;
+                EnablePhoto();
+            }
+            else
+            {
+                DisablePhoto();
+            }
+
+        }
+
+        void EnableNail()
+        {
+            NailY_numericUpDown.Enabled = true;
+            NailM_numericUpDown.Enabled = true;
+            NailC_numericUpDown.Enabled = true;
+            PrintNail_button.Enabled = true;
+            Nail_Regi_write_button.Enabled = true;
+            BTPrintNail_button.Enabled = true;
+        }
+        void DisableNail()
+        {
+            NailY_numericUpDown.Value = 0;
+            NailM_numericUpDown.Value = 0;
+            NailC_numericUpDown.Value = 0;
+            NailY_numericUpDown.Enabled = false;
+            NailM_numericUpDown.Enabled = false;
+            NailC_numericUpDown.Enabled = false;
+            PrintNail_button.Enabled = false;
+            Nail_Regi_write_button.Enabled = false;
+            BTPrintNail_button.Enabled = false;
+        }
+
+        void EnablePhoto()
+        {
+            PhotoM_numericUpDown.Enabled = true;
+            PhotoC_numericUpDown.Enabled = true;
+            PrintPhoto_button.Enabled = true;
+            Photo_Regi_write_button.Enabled = true;
+            BTPrintPhoto_button.Enabled = true;
+            
+        }
+        void DisablePhoto()
+        {
+            PhotoM_numericUpDown.Enabled = false;
+            PhotoC_numericUpDown.Enabled = false;
+            PrintPhoto_button.Enabled = false;
+            Photo_Regi_write_button.Enabled = false;
+            BTPrintPhoto_button.Enabled = false;
+
+            PhotoM_numericUpDown.Value = 0;
+            PhotoC_numericUpDown.Value = 0;
+        }
+
+
+        public Boolean SendImageViaBluetooth(String mac, bool isNail)
+        {
+            Boolean result = true;
+            string imageName = "";
+
+            if (isNail == true) imageName = "DMP_FPQ_image_nail.jpg";
+            else imageName = "DMP_FPQ_image_photo.jpg";
+
+            using (BluetoothClient client = new BluetoothClient())
+            {
+                try
+                {
+                    try
+                    {
+                        client.Authenticate = true;
+                        client.SetPin(BluetoothAddress.Parse(mac), "0000");
+                        client.Connect(BluetoothAddress.Parse(mac), BluetoothService.SerialPort);
+                    }
+                    catch
+                    {
+                        //bluetoothError = (rb_korean.Checked) ? "Check Bluetooth status" : "Kiểm tra trạng thái Bluetooth";
+                        throw new Exception();
+                    }
+
+                    try
+                    {
+                        if (!client.Connected)
+                            throw new Exception();
+
+                        using (NetworkStream networkStream = client.GetStream())
+                        {
+                            networkStream.ReadTimeout = 10000;
+
+                            Int32 imageSize = (int)new FileInfo(imageName).Length;
+                            Byte[] sizeArray = BitConverter.GetBytes(imageSize);
+                            Byte[] buffer = new Byte[34];
+
+
+
+                            for (Int32 i = 0; i < buffer.Length; i++)
+                                buffer[i] = 0x00;
+
+                            buffer[0] = 0x1b;
+                            buffer[1] = 0x2a;
+                            buffer[2] = 0x44;
+                            buffer[3] = 0x53;
+                            buffer[4] = 0x00;
+                            buffer[5] = 0x02;
+                            buffer[6] = 0x01;
+                            buffer[7] = 0x01;
+                            buffer[8] = 0x00;
+                            if (isNail == true)
+                            {
+                                buffer[9] = 0x01; // Nail
+                                buffer[10] = 0x00; // 4x3"
+                            }
+                            else
+                            {
+                                buffer[9] = 0x02; // Photo
+                                buffer[10] = 0x03; // 4x6"
+                            }
+
+                            networkStream.Write(buffer, 0, buffer.Length);
+                            networkStream.Read(buffer, 0, buffer.Length);
+
+                            RemainedMedia = "";
+                            RemainedMedia = RemainedMedia.Insert(0, string.Format("{0:x2}", buffer[28]));
+                            RemainedMedia = Convert.ToString(Convert.ToInt32(RemainedMedia, 16));
+
+                            for (Int32 i = 0; i < buffer.Length; i++)
+                                buffer[i] = 0x00;
+
+                            buffer[0] = 0x1b;
+                            buffer[1] = 0x2a;
+                            buffer[2] = 0x44;
+                            buffer[3] = 0x53;
+                            buffer[4] = 0x00;
+                            buffer[5] = 0x02;
+                            buffer[6] = 0x00;
+                            buffer[7] = 0x00;
+                            buffer[8] = sizeArray[2];
+                            buffer[9] = sizeArray[1];
+                            buffer[10] = sizeArray[0];
+                            buffer[11] = 0x01;
+
+                            networkStream.Write(buffer, 0, buffer.Length);
+                            networkStream.Read(buffer, 0, buffer.Length);
+
+                            if (buffer[6] == 0x02 && buffer[7] == 0x00)
+                            {
+                                if (buffer[8] == 0x00)
+                                {
+                                    using (FileStream fileStream = new FileStream(imageName, FileMode.Open, FileAccess.Read))
+                                    using (BinaryReader binaryReader = new BinaryReader(fileStream))
+                                    {
+                                        Byte[] imageBuffer = binaryReader.ReadBytes(imageSize);
+                                        networkStream.Write(imageBuffer, 0, imageBuffer.Length);
+                                    }
+
+                                    networkStream.Read(buffer, 0, buffer.Length);
+
+                                    if (buffer[6] != 0x02 || buffer[7] != 0x01)
+                                        result = false;
+                                }
+                                else
+                                {
+                                    switch (buffer[8])
+                                    {
+                                        case 0x01:
+                                            bluetoothError = "RIBBON REPLACE ERROR";
+                                            break;
+                                        case 0x02:
+                                            bluetoothError = "RIBBON EMPTY";
+                                            break;
+                                        case 0x03:
+                                            bluetoothError = "BUSY";
+                                            break;
+                                        case 0x04:
+                                            bluetoothError = "PAPER MISFEED";
+                                            break;
+                                        case 0x05:
+                                            bluetoothError = "WRONG CUSTOMER";
+                                            break;
+                                        case 0x06:
+                                            bluetoothError = "DATA ERROR";
+                                            break;
+                                        case 0x07:
+                                            bluetoothError = "CARTRIDGE EMPTY";
+                                            break;
+                                        case 0x08:
+                                            bluetoothError = "SYSTEM ERROR";
+                                            break;
+                                        case 0x09:
+                                            bluetoothError = "BATTERY LOW";
+                                            break;
+                                        case 0x0a:
+                                            bluetoothError = "HIGH TEMPERATURE";
+                                            break;
+                                        case 0x0b:
+                                            bluetoothError = "LOW TEMPERATURE";
+                                            break;
+                                        case 0x0c:
+                                            bluetoothError = "COOLING MODE";
+                                            break;
+                                        case 0x0d:
+                                            bluetoothError = "BATTERY TOO LOW";
+                                            break;
+                                    }
+
+                                    result = false;
+                                }
+                            }
+                            else
+                            {
+                                switch (buffer[8])
+                                {
+                                    case 0x01:
+                                        bluetoothError = "RIBBON REPLACE ERROR";
+                                        break;
+                                    case 0x02:
+                                        bluetoothError = "RIBBON EMPTY";
+                                        break;
+                                    case 0x03:
+                                        bluetoothError = "BUSY";
+                                        break;
+                                    case 0x04:
+                                        bluetoothError = "PAPER MISFEED";
+                                        break;
+                                    case 0x05:
+                                        bluetoothError = "WRONG CUSTOMER";
+                                        break;
+                                    case 0x06:
+                                        bluetoothError = "DATA ERROR";
+                                        break;
+                                    case 0x07:
+                                        bluetoothError = "CARTRIDGE EMPTY";
+                                        break;
+                                    case 0x08:
+                                        bluetoothError = "SYSTEM ERROR";
+                                        break;
+                                    case 0x09:
+                                        bluetoothError = "BATTERY LOW";
+                                        break;
+                                    case 0x0a:
+                                        bluetoothError = "HIGH TEMPERATURE";
+                                        break;
+                                    case 0x0b:
+                                        bluetoothError = "LOW TEMPERATURE";
+                                        break;
+                                    case 0x0c:
+                                        bluetoothError = "COOLING MODE";
+                                        break;
+                                    case 0x0d:
+                                        bluetoothError = "BATTERY TOO LOW";
+                                        break;
+                                }
+
+                                result = false;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    //bluetoothError = (rb_korean.Checked) ? "TIMEOUT" : "Hết giờ";
+                    result = false;
+                }
+                catch (Exception ex)
+                {
+                    result = false;
+                }
+            }
+            return result;
+        }
     }
 }
 

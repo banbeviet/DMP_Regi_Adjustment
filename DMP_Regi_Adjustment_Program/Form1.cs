@@ -24,6 +24,7 @@ using InTheHand.Net;
 using InTheHand.Net.Sockets;
 using InTheHand.Net.Bluetooth;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 
 namespace DMP_Regi_Adjustment_Program
 {
@@ -76,13 +77,11 @@ namespace DMP_Regi_Adjustment_Program
         string RemainedMedia = "";
         String bluetoothError = null;
         Boolean isManufacturingReset = false;
+
+        string BtMac;
         public Form1()
         {
             InitializeComponent();
-            //enable_works();
-
-            //Photo_groupbox.Enabled = false;
-
             ProcessStartInfo startInfo = new ProcessStartInfo("taskkill");
             startInfo.Arguments = "/im dbgmon.exe /f";
             startInfo.UseShellExecute = false;
@@ -114,10 +113,6 @@ namespace DMP_Regi_Adjustment_Program
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
-            //readingProcess.StartInfo.FileName = Application.StartupPath + "\\dbgmon\\dbgmon.exe";
-            //readingProcess.StartInfo.Arguments = "read.txt result.txt";
-            //readingProcess.StartInfo.CreateNoWindow = true;
-            //readingProcess.StartInfo.UseShellExecute = false;
             readingProcess.Exited += readingProcess_Exited;
 
             UsbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent; // 이벤트 핸들러 추가
@@ -134,8 +129,7 @@ namespace DMP_Regi_Adjustment_Program
 
         void readingProcess_Exited(object sender, EventArgs e)
         {
-            String btMac = null;
-
+            BtMac = null;
             try
             {
                 using (StreamReader reader = new StreamReader(new FileStream("dbgmon\\ds_AppManage.log", FileMode.Open)))
@@ -153,7 +147,7 @@ namespace DMP_Regi_Adjustment_Program
                             {
                                 if (strArray[i].Equals("[BT]"))
                                 {
-                                    btMac = strArray[i + 1];
+                                    BtMac = strArray[i + 1];
                                 }
                             }
                         }
@@ -217,7 +211,9 @@ namespace DMP_Regi_Adjustment_Program
                 toolStripStatusLabel1.Text = @"USB Disconnected";
             }
             sPrinterStatus = PrinterStatus.USB_DISCONNECTED;
-            disable_works();
+            //disable_works();
+            Setting_groupBox.Enabled = false;
+            BtMac = null;
         }
 
         private void enable_works()
@@ -365,7 +361,8 @@ namespace DMP_Regi_Adjustment_Program
             }
             else { }
             sPrinterStatus = PrinterStatus.USB_CONNECTED_READY;
-            enable_works();
+            //enable_works();
+            Setting_groupBox.Enabled = true;
             DBGMonStatus_label.Text = "";
         }
 
@@ -613,14 +610,48 @@ namespace DMP_Regi_Adjustment_Program
 
         private void BTPrintPhoto_button_Click(object sender, EventArgs e)
         {
-
+            readingProcess.EnableRaisingEvents = true;
+            readingProcess.Start();
+            readingProcess.WaitForExit();
+            SendImageViaBluetooth(BtMac, false);
         }
 
         private void BTPrintNail_button_Click(object sender, EventArgs e)
         {
-
+            
             readingProcess.EnableRaisingEvents = true;
             readingProcess.Start();
+            readingProcess.WaitForExit();
+            if (SendImageViaBluetooth(BtMac,true))
+            {
+                Invoke(new Action(delegate ()
+                {
+                    BluetoothStatus_label.Text = "PASS";
+                    BluetoothStatus_label.ForeColor = Color.Green;
+                    Update();
+                }));
+            }
+            else
+            {
+                if (bluetoothError == null)
+                    bluetoothError = "UNKNOWN ERROR";
+
+                Invoke(new Action(delegate ()
+                {
+                    BluetoothStatus_label.Text = bluetoothError;
+                    BluetoothStatus_label.ForeColor = Color.Red;
+                    Update();
+                }));
+
+                Invoke(new Action(delegate ()
+                {
+                    MessageBox.Show(bluetoothError);
+                }));
+
+
+                bluetoothError = null;
+            }
+
         }
 
         private void Nail_CheckedChanged(object sender, EventArgs e)
@@ -694,12 +725,12 @@ namespace DMP_Regi_Adjustment_Program
         }
 
 
-        public Boolean SendImageViaBluetooth(String mac, bool isNail)
+        public Boolean SendImageViaBluetooth(String mac, bool isNailPaper)
         {
             Boolean result = true;
             string imageName = "";
 
-            if (isNail == true) imageName = "DMP_FPQ_image_nail.jpg";
+            if (isNailPaper == true) imageName = "DMP_FPQ_image_nail.jpg";
             else imageName = "DMP_FPQ_image_photo.jpg";
 
             using (BluetoothClient client = new BluetoothClient())
@@ -745,7 +776,7 @@ namespace DMP_Regi_Adjustment_Program
                             buffer[6] = 0x01;
                             buffer[7] = 0x01;
                             buffer[8] = 0x00;
-                            if (isNail == true)
+                            if (isNailPaper == true)
                             {
                                 buffer[9] = 0x01; // Nail
                                 buffer[10] = 0x00; // 4x3"

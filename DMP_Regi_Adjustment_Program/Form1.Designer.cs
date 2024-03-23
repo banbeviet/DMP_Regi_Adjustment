@@ -56,8 +56,8 @@
             this.BluetoothStatus_groupBox = new System.Windows.Forms.GroupBox();
             this.BluetoothStatus_label = new System.Windows.Forms.Label();
             this.Setting_groupBox = new System.Windows.Forms.GroupBox();
-            this.cbx_Photo = new System.Windows.Forms.CheckBox();
-            this.cbx_Nail = new System.Windows.Forms.CheckBox();
+            this.rdb_Photo = new System.Windows.Forms.RadioButton();
+            this.rdb_Nail = new System.Windows.Forms.RadioButton();
             this.gb_Nail = new System.Windows.Forms.GroupBox();
             this.BTPrintNail_button = new System.Windows.Forms.Button();
             this.Photo_groupbox = new System.Windows.Forms.GroupBox();
@@ -81,27 +81,25 @@
             this.statusStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip.Location = new System.Drawing.Point(0, 576);
+            this.statusStrip.Location = new System.Drawing.Point(0, 505);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Padding = new System.Windows.Forms.Padding(2, 0, 18, 0);
-            this.statusStrip.Size = new System.Drawing.Size(842, 32);
+            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 12, 0);
+            this.statusStrip.Size = new System.Drawing.Size(784, 22);
             this.statusStrip.TabIndex = 0;
             this.statusStrip.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(237, 25);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(157, 17);
             this.toolStripStatusLabel1.Text = "Please re-plug the USB cable";
             // 
             // DeviceStatus_groupBox
             // 
             this.DeviceStatus_groupBox.Controls.Add(this.DeviceStatus_label);
-            this.DeviceStatus_groupBox.Location = new System.Drawing.Point(20, 22);
-            this.DeviceStatus_groupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.DeviceStatus_groupBox.Location = new System.Drawing.Point(13, 14);
             this.DeviceStatus_groupBox.Name = "DeviceStatus_groupBox";
-            this.DeviceStatus_groupBox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.DeviceStatus_groupBox.Size = new System.Drawing.Size(284, 168);
+            this.DeviceStatus_groupBox.Size = new System.Drawing.Size(189, 109);
             this.DeviceStatus_groupBox.TabIndex = 1;
             this.DeviceStatus_groupBox.TabStop = false;
             this.DeviceStatus_groupBox.Text = "Device Status";
@@ -109,22 +107,19 @@
             // DeviceStatus_label
             // 
             this.DeviceStatus_label.AutoSize = true;
-            this.DeviceStatus_label.Font = new System.Drawing.Font("Gulim", 18F);
-            this.DeviceStatus_label.Location = new System.Drawing.Point(22, 68);
-            this.DeviceStatus_label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.DeviceStatus_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DeviceStatus_label.Location = new System.Drawing.Point(15, 44);
             this.DeviceStatus_label.Name = "DeviceStatus_label";
-            this.DeviceStatus_label.Size = new System.Drawing.Size(248, 36);
+            this.DeviceStatus_label.Size = new System.Drawing.Size(126, 24);
             this.DeviceStatus_label.TabIndex = 0;
             this.DeviceStatus_label.Text = "Disconnected";
             // 
             // DBGMon_groupBox
             // 
             this.DBGMon_groupBox.Controls.Add(this.DBGMonStatus_label);
-            this.DBGMon_groupBox.Location = new System.Drawing.Point(310, 22);
-            this.DBGMon_groupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.DBGMon_groupBox.Location = new System.Drawing.Point(207, 14);
             this.DBGMon_groupBox.Name = "DBGMon_groupBox";
-            this.DBGMon_groupBox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.DBGMon_groupBox.Size = new System.Drawing.Size(164, 168);
+            this.DBGMon_groupBox.Size = new System.Drawing.Size(205, 109);
             this.DBGMon_groupBox.TabIndex = 6;
             this.DBGMon_groupBox.TabStop = false;
             this.DBGMon_groupBox.Text = "DBGMon Status";
@@ -132,11 +127,10 @@
             // DBGMonStatus_label
             // 
             this.DBGMonStatus_label.AutoSize = true;
-            this.DBGMonStatus_label.Font = new System.Drawing.Font("Gulim", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.DBGMonStatus_label.Location = new System.Drawing.Point(40, 68);
-            this.DBGMonStatus_label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.DBGMonStatus_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DBGMonStatus_label.Location = new System.Drawing.Point(27, 44);
             this.DBGMonStatus_label.Name = "DBGMonStatus_label";
-            this.DBGMonStatus_label.Size = new System.Drawing.Size(96, 41);
+            this.DBGMonStatus_label.Size = new System.Drawing.Size(28, 24);
             this.DBGMonStatus_label.TabIndex = 0;
             this.DBGMonStatus_label.Text = "---";
             // 
@@ -149,8 +143,7 @@
             0,
             0,
             131072});
-            this.NailY_numericUpDown.Location = new System.Drawing.Point(129, 49);
-            this.NailY_numericUpDown.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.NailY_numericUpDown.Location = new System.Drawing.Point(116, 46);
             this.NailY_numericUpDown.Maximum = new decimal(new int[] {
             125,
             0,
@@ -162,7 +155,7 @@
             0,
             -2147352576});
             this.NailY_numericUpDown.Name = "NailY_numericUpDown";
-            this.NailY_numericUpDown.Size = new System.Drawing.Size(72, 26);
+            this.NailY_numericUpDown.Size = new System.Drawing.Size(48, 20);
             this.NailY_numericUpDown.TabIndex = 506;
             // 
             // NailM_numericUpDown
@@ -174,8 +167,7 @@
             0,
             0,
             131072});
-            this.NailM_numericUpDown.Location = new System.Drawing.Point(129, 95);
-            this.NailM_numericUpDown.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.NailM_numericUpDown.Location = new System.Drawing.Point(116, 76);
             this.NailM_numericUpDown.Maximum = new decimal(new int[] {
             125,
             0,
@@ -187,7 +179,7 @@
             0,
             -2147352576});
             this.NailM_numericUpDown.Name = "NailM_numericUpDown";
-            this.NailM_numericUpDown.Size = new System.Drawing.Size(72, 26);
+            this.NailM_numericUpDown.Size = new System.Drawing.Size(48, 20);
             this.NailM_numericUpDown.TabIndex = 507;
             // 
             // NailC_numericUpDown
@@ -199,8 +191,7 @@
             0,
             0,
             131072});
-            this.NailC_numericUpDown.Location = new System.Drawing.Point(129, 140);
-            this.NailC_numericUpDown.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.NailC_numericUpDown.Location = new System.Drawing.Point(116, 105);
             this.NailC_numericUpDown.Maximum = new decimal(new int[] {
             125,
             0,
@@ -212,7 +203,7 @@
             0,
             -2147352576});
             this.NailC_numericUpDown.Name = "NailC_numericUpDown";
-            this.NailC_numericUpDown.Size = new System.Drawing.Size(72, 26);
+            this.NailC_numericUpDown.Size = new System.Drawing.Size(48, 20);
             this.NailC_numericUpDown.TabIndex = 508;
             // 
             // PhotoM_numericUpDown
@@ -224,8 +215,7 @@
             0,
             0,
             131072});
-            this.PhotoM_numericUpDown.Location = new System.Drawing.Point(98, 45);
-            this.PhotoM_numericUpDown.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.PhotoM_numericUpDown.Location = new System.Drawing.Point(118, 45);
             this.PhotoM_numericUpDown.Maximum = new decimal(new int[] {
             125,
             0,
@@ -237,7 +227,7 @@
             0,
             -2147352576});
             this.PhotoM_numericUpDown.Name = "PhotoM_numericUpDown";
-            this.PhotoM_numericUpDown.Size = new System.Drawing.Size(72, 26);
+            this.PhotoM_numericUpDown.Size = new System.Drawing.Size(48, 20);
             this.PhotoM_numericUpDown.TabIndex = 509;
             // 
             // PhotoC_numericUpDown
@@ -249,8 +239,7 @@
             0,
             0,
             131072});
-            this.PhotoC_numericUpDown.Location = new System.Drawing.Point(98, 89);
-            this.PhotoC_numericUpDown.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.PhotoC_numericUpDown.Location = new System.Drawing.Point(118, 74);
             this.PhotoC_numericUpDown.Maximum = new decimal(new int[] {
             125,
             0,
@@ -262,16 +251,15 @@
             0,
             -2147352576});
             this.PhotoC_numericUpDown.Name = "PhotoC_numericUpDown";
-            this.PhotoC_numericUpDown.Size = new System.Drawing.Size(72, 26);
+            this.PhotoC_numericUpDown.Size = new System.Drawing.Size(48, 20);
             this.PhotoC_numericUpDown.TabIndex = 510;
             // 
             // PrintNail_button
             // 
             this.PrintNail_button.Enabled = false;
-            this.PrintNail_button.Location = new System.Drawing.Point(218, 49);
-            this.PrintNail_button.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.PrintNail_button.Location = new System.Drawing.Point(175, 46);
             this.PrintNail_button.Name = "PrintNail_button";
-            this.PrintNail_button.Size = new System.Drawing.Size(165, 65);
+            this.PrintNail_button.Size = new System.Drawing.Size(110, 42);
             this.PrintNail_button.TabIndex = 511;
             this.PrintNail_button.Text = "Print Nail";
             this.PrintNail_button.UseVisualStyleBackColor = true;
@@ -280,10 +268,9 @@
             // PrintPhoto_button
             // 
             this.PrintPhoto_button.Enabled = false;
-            this.PrintPhoto_button.Location = new System.Drawing.Point(184, 48);
-            this.PrintPhoto_button.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.PrintPhoto_button.Location = new System.Drawing.Point(176, 45);
             this.PrintPhoto_button.Name = "PrintPhoto_button";
-            this.PrintPhoto_button.Size = new System.Drawing.Size(189, 68);
+            this.PrintPhoto_button.Size = new System.Drawing.Size(126, 44);
             this.PrintPhoto_button.TabIndex = 512;
             this.PrintPhoto_button.Text = "Print Photo";
             this.PrintPhoto_button.UseVisualStyleBackColor = true;
@@ -292,10 +279,9 @@
             // Nail_Regi_write_button
             // 
             this.Nail_Regi_write_button.Enabled = false;
-            this.Nail_Regi_write_button.Location = new System.Drawing.Point(0, 228);
-            this.Nail_Regi_write_button.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Nail_Regi_write_button.Location = new System.Drawing.Point(35, 162);
             this.Nail_Regi_write_button.Name = "Nail_Regi_write_button";
-            this.Nail_Regi_write_button.Size = new System.Drawing.Size(392, 72);
+            this.Nail_Regi_write_button.Size = new System.Drawing.Size(261, 47);
             this.Nail_Regi_write_button.TabIndex = 513;
             this.Nail_Regi_write_button.Text = "Write Nail Regi Data";
             this.Nail_Regi_write_button.UseVisualStyleBackColor = true;
@@ -304,10 +290,9 @@
             // Photo_Regi_write_button
             // 
             this.Photo_Regi_write_button.Enabled = false;
-            this.Photo_Regi_write_button.Location = new System.Drawing.Point(0, 228);
-            this.Photo_Regi_write_button.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Photo_Regi_write_button.Location = new System.Drawing.Point(57, 162);
             this.Photo_Regi_write_button.Name = "Photo_Regi_write_button";
-            this.Photo_Regi_write_button.Size = new System.Drawing.Size(386, 72);
+            this.Photo_Regi_write_button.Size = new System.Drawing.Size(257, 47);
             this.Photo_Regi_write_button.TabIndex = 514;
             this.Photo_Regi_write_button.Text = "Write Photo Regi Data";
             this.Photo_Regi_write_button.UseVisualStyleBackColor = true;
@@ -315,21 +300,19 @@
             // 
             // PrinterSN_textBox
             // 
-            this.PrinterSN_textBox.Location = new System.Drawing.Point(170, 205);
-            this.PrinterSN_textBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.PrinterSN_textBox.Location = new System.Drawing.Point(157, 133);
             this.PrinterSN_textBox.MaxLength = 18;
             this.PrinterSN_textBox.Name = "PrinterSN_textBox";
-            this.PrinterSN_textBox.Size = new System.Drawing.Size(646, 26);
+            this.PrinterSN_textBox.Size = new System.Drawing.Size(475, 20);
             this.PrinterSN_textBox.TabIndex = 515;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(21, 31);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(44, 34);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(50, 20);
+            this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 516;
             this.label1.Text = "White";
             // 
@@ -337,10 +320,9 @@
             // 
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Yellow;
-            this.label2.Location = new System.Drawing.Point(21, 75);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(44, 63);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 20);
+            this.label2.Size = new System.Drawing.Size(38, 13);
             this.label2.TabIndex = 517;
             this.label2.Text = "Yellow";
             // 
@@ -348,10 +330,9 @@
             // 
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.Magenta;
-            this.label3.Location = new System.Drawing.Point(21, 120);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(44, 92);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(72, 20);
+            this.label3.Size = new System.Drawing.Size(49, 13);
             this.label3.TabIndex = 518;
             this.label3.Text = "Magenta";
             // 
@@ -359,10 +340,9 @@
             // 
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.Cyan;
-            this.label4.Location = new System.Drawing.Point(21, 163);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(44, 120);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(45, 20);
+            this.label4.Size = new System.Drawing.Size(31, 13);
             this.label4.TabIndex = 519;
             this.label4.Text = "Cyan";
             // 
@@ -370,10 +350,9 @@
             // 
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.Color.Cyan;
-            this.label5.Location = new System.Drawing.Point(8, 118);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(58, 93);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(45, 20);
+            this.label5.Size = new System.Drawing.Size(31, 13);
             this.label5.TabIndex = 522;
             this.label5.Text = "Cyan";
             // 
@@ -381,10 +360,9 @@
             // 
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.Color.Magenta;
-            this.label6.Location = new System.Drawing.Point(8, 75);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(58, 65);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(72, 20);
+            this.label6.Size = new System.Drawing.Size(49, 13);
             this.label6.TabIndex = 521;
             this.label6.Text = "Magenta";
             // 
@@ -392,10 +370,9 @@
             // 
             this.label7.AutoSize = true;
             this.label7.BackColor = System.Drawing.Color.Yellow;
-            this.label7.Location = new System.Drawing.Point(8, 31);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(58, 36);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(55, 20);
+            this.label7.Size = new System.Drawing.Size(38, 13);
             this.label7.TabIndex = 520;
             this.label7.Text = "Yellow";
             // 
@@ -403,21 +380,18 @@
             // 
             this.label8.AutoSize = true;
             this.label8.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label8.Location = new System.Drawing.Point(44, 209);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Location = new System.Drawing.Point(73, 136);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(112, 20);
+            this.label8.Size = new System.Drawing.Size(76, 13);
             this.label8.TabIndex = 523;
             this.label8.Text = "Printer Serial #";
             // 
             // BluetoothStatus_groupBox
             // 
             this.BluetoothStatus_groupBox.Controls.Add(this.BluetoothStatus_label);
-            this.BluetoothStatus_groupBox.Location = new System.Drawing.Point(483, 22);
-            this.BluetoothStatus_groupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BluetoothStatus_groupBox.Location = new System.Drawing.Point(418, 14);
             this.BluetoothStatus_groupBox.Name = "BluetoothStatus_groupBox";
-            this.BluetoothStatus_groupBox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.BluetoothStatus_groupBox.Size = new System.Drawing.Size(164, 168);
+            this.BluetoothStatus_groupBox.Size = new System.Drawing.Size(242, 109);
             this.BluetoothStatus_groupBox.TabIndex = 524;
             this.BluetoothStatus_groupBox.TabStop = false;
             this.BluetoothStatus_groupBox.Text = "BLuetooth Status";
@@ -425,49 +399,48 @@
             // BluetoothStatus_label
             // 
             this.BluetoothStatus_label.AutoSize = true;
-            this.BluetoothStatus_label.Font = new System.Drawing.Font("Gulim", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.BluetoothStatus_label.Location = new System.Drawing.Point(40, 68);
-            this.BluetoothStatus_label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.BluetoothStatus_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BluetoothStatus_label.Location = new System.Drawing.Point(27, 44);
             this.BluetoothStatus_label.Name = "BluetoothStatus_label";
-            this.BluetoothStatus_label.Size = new System.Drawing.Size(96, 41);
+            this.BluetoothStatus_label.Size = new System.Drawing.Size(28, 24);
             this.BluetoothStatus_label.TabIndex = 0;
             this.BluetoothStatus_label.Text = "---";
             // 
             // Setting_groupBox
             // 
-            this.Setting_groupBox.Controls.Add(this.cbx_Photo);
-            this.Setting_groupBox.Controls.Add(this.cbx_Nail);
+            this.Setting_groupBox.Controls.Add(this.rdb_Photo);
+            this.Setting_groupBox.Controls.Add(this.rdb_Nail);
             this.Setting_groupBox.Enabled = false;
-            this.Setting_groupBox.Location = new System.Drawing.Point(656, 22);
-            this.Setting_groupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Setting_groupBox.Location = new System.Drawing.Point(664, 13);
             this.Setting_groupBox.Name = "Setting_groupBox";
-            this.Setting_groupBox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Setting_groupBox.Size = new System.Drawing.Size(164, 168);
+            this.Setting_groupBox.Size = new System.Drawing.Size(110, 109);
             this.Setting_groupBox.TabIndex = 7;
             this.Setting_groupBox.TabStop = false;
             this.Setting_groupBox.Text = "Settings";
             // 
-            // cbx_Photo
+            // rdb_Photo
             // 
-            this.cbx_Photo.AutoSize = true;
-            this.cbx_Photo.Location = new System.Drawing.Point(20, 83);
-            this.cbx_Photo.Name = "cbx_Photo";
-            this.cbx_Photo.Size = new System.Drawing.Size(77, 24);
-            this.cbx_Photo.TabIndex = 1;
-            this.cbx_Photo.Text = "Photo";
-            this.cbx_Photo.UseVisualStyleBackColor = true;
-            this.cbx_Photo.CheckedChanged += new System.EventHandler(this.cbx_Photo_CheckedChanged);
+            this.rdb_Photo.AutoSize = true;
+            this.rdb_Photo.Location = new System.Drawing.Point(18, 64);
+            this.rdb_Photo.Name = "rdb_Photo";
+            this.rdb_Photo.Size = new System.Drawing.Size(53, 17);
+            this.rdb_Photo.TabIndex = 2;
+            this.rdb_Photo.Text = "Photo";
+            this.rdb_Photo.UseVisualStyleBackColor = true;
+            this.rdb_Photo.CheckedChanged += new System.EventHandler(this.rdb_Photo_CheckedChanged);
             // 
-            // cbx_Nail
+            // rdb_Nail
             // 
-            this.cbx_Nail.AutoSize = true;
-            this.cbx_Nail.Location = new System.Drawing.Point(20, 37);
-            this.cbx_Nail.Name = "cbx_Nail";
-            this.cbx_Nail.Size = new System.Drawing.Size(61, 24);
-            this.cbx_Nail.TabIndex = 0;
-            this.cbx_Nail.Text = "Nail";
-            this.cbx_Nail.UseVisualStyleBackColor = true;
-            this.cbx_Nail.CheckedChanged += new System.EventHandler(this.Nail_CheckedChanged);
+            this.rdb_Nail.AutoSize = true;
+            this.rdb_Nail.Checked = true;
+            this.rdb_Nail.Location = new System.Drawing.Point(18, 33);
+            this.rdb_Nail.Name = "rdb_Nail";
+            this.rdb_Nail.Size = new System.Drawing.Size(43, 17);
+            this.rdb_Nail.TabIndex = 1;
+            this.rdb_Nail.TabStop = true;
+            this.rdb_Nail.Text = "Nail";
+            this.rdb_Nail.UseVisualStyleBackColor = true;
+            this.rdb_Nail.CheckedChanged += new System.EventHandler(this.rdb_Nail_CheckedChanged);
             // 
             // gb_Nail
             // 
@@ -482,11 +455,9 @@
             this.gb_Nail.Controls.Add(this.label2);
             this.gb_Nail.Controls.Add(this.label4);
             this.gb_Nail.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.gb_Nail.Location = new System.Drawing.Point(20, 248);
-            this.gb_Nail.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.gb_Nail.Location = new System.Drawing.Point(13, 161);
             this.gb_Nail.Name = "gb_Nail";
-            this.gb_Nail.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gb_Nail.Size = new System.Drawing.Size(392, 302);
+            this.gb_Nail.Size = new System.Drawing.Size(385, 274);
             this.gb_Nail.TabIndex = 525;
             this.gb_Nail.TabStop = false;
             this.gb_Nail.Text = "Nail";
@@ -494,10 +465,9 @@
             // BTPrintNail_button
             // 
             this.BTPrintNail_button.Enabled = false;
-            this.BTPrintNail_button.Location = new System.Drawing.Point(218, 126);
-            this.BTPrintNail_button.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BTPrintNail_button.Location = new System.Drawing.Point(175, 96);
             this.BTPrintNail_button.Name = "BTPrintNail_button";
-            this.BTPrintNail_button.Size = new System.Drawing.Size(165, 57);
+            this.BTPrintNail_button.Size = new System.Drawing.Size(110, 37);
             this.BTPrintNail_button.TabIndex = 520;
             this.BTPrintNail_button.Text = "BT Print Nail";
             this.BTPrintNail_button.UseVisualStyleBackColor = true;
@@ -513,11 +483,9 @@
             this.Photo_groupbox.Controls.Add(this.label5);
             this.Photo_groupbox.Controls.Add(this.Photo_Regi_write_button);
             this.Photo_groupbox.Controls.Add(this.label6);
-            this.Photo_groupbox.Location = new System.Drawing.Point(434, 248);
-            this.Photo_groupbox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Photo_groupbox.Location = new System.Drawing.Point(404, 161);
             this.Photo_groupbox.Name = "Photo_groupbox";
-            this.Photo_groupbox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.Photo_groupbox.Size = new System.Drawing.Size(386, 302);
+            this.Photo_groupbox.Size = new System.Drawing.Size(370, 274);
             this.Photo_groupbox.TabIndex = 8;
             this.Photo_groupbox.TabStop = false;
             this.Photo_groupbox.Text = "Photo";
@@ -525,10 +493,9 @@
             // BTPrintPhoto_button
             // 
             this.BTPrintPhoto_button.Enabled = false;
-            this.BTPrintPhoto_button.Location = new System.Drawing.Point(184, 126);
-            this.BTPrintPhoto_button.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.BTPrintPhoto_button.Location = new System.Drawing.Point(176, 96);
             this.BTPrintPhoto_button.Name = "BTPrintPhoto_button";
-            this.BTPrintPhoto_button.Size = new System.Drawing.Size(189, 57);
+            this.BTPrintPhoto_button.Size = new System.Drawing.Size(126, 37);
             this.BTPrintPhoto_button.TabIndex = 521;
             this.BTPrintPhoto_button.Text = "BT Print Photo";
             this.BTPrintPhoto_button.UseVisualStyleBackColor = true;
@@ -536,9 +503,9 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(842, 608);
+            this.ClientSize = new System.Drawing.Size(784, 527);
             this.Controls.Add(this.Photo_groupbox);
             this.Controls.Add(this.gb_Nail);
             this.Controls.Add(this.Setting_groupBox);
@@ -549,9 +516,9 @@
             this.Controls.Add(this.DeviceStatus_groupBox);
             this.Controls.Add(this.statusStrip);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DMP Regi Adjustment Program v0.1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.statusStrip.ResumeLayout(false);
@@ -609,10 +576,10 @@
         private System.Windows.Forms.GroupBox Setting_groupBox;
         private System.Windows.Forms.GroupBox gb_Nail;
         private System.Windows.Forms.GroupBox Photo_groupbox;
-        private System.Windows.Forms.CheckBox cbx_Photo;
-        private System.Windows.Forms.CheckBox cbx_Nail;
         private System.Windows.Forms.Button BTPrintNail_button;
         private System.Windows.Forms.Button BTPrintPhoto_button;
+        private System.Windows.Forms.RadioButton rdb_Photo;
+        private System.Windows.Forms.RadioButton rdb_Nail;
     }
 }
 

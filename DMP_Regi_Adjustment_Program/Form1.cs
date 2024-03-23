@@ -132,7 +132,8 @@ namespace DMP_Regi_Adjustment_Program
             BtMac = null;
             try
             {
-                using (StreamReader reader = new StreamReader(new FileStream("dbgmon\\ds_AppManage.log", FileMode.Open)))
+                //using (StreamReader reader = new StreamReader(new FileStream("dbgmon\\ds_AppManage.log", FileMode.Open)))
+                using (StreamReader reader = new StreamReader(new FileStream("ds_AppManage.log", FileMode.Open)))
                 {
                     Char[] delimeterChars = { ' ', '=', ',', '\t', '\"', '%', '(', ')', '|' };
                     String[] strArray = null;
@@ -363,6 +364,25 @@ namespace DMP_Regi_Adjustment_Program
             sPrinterStatus = PrinterStatus.USB_CONNECTED_READY;
             //enable_works();
             Setting_groupBox.Enabled = true;
+            if (rdb_Nail.Checked)
+            {
+                rdb_Photo.Checked = false;
+                EnableNail();
+            }
+            else
+            {
+                DisableNail();
+            }
+
+            if (rdb_Photo.Checked)
+            {
+                rdb_Nail.Checked = false;
+                EnablePhoto();
+            }
+            else
+            {
+                DisablePhoto();
+            }
             DBGMonStatus_label.Text = "";
         }
 
@@ -610,6 +630,8 @@ namespace DMP_Regi_Adjustment_Program
 
         private void BTPrintPhoto_button_Click(object sender, EventArgs e)
         {
+            //hear insert msg wr ac_scratch20 52 
+
             readingProcess.EnableRaisingEvents = true;
             readingProcess.Start();
             readingProcess.WaitForExit();
@@ -618,7 +640,7 @@ namespace DMP_Regi_Adjustment_Program
 
         private void BTPrintNail_button_Click(object sender, EventArgs e)
         {
-            
+            //hear insert msg add to "wr ac_scratch20 52" 
             readingProcess.EnableRaisingEvents = true;
             readingProcess.Start();
             readingProcess.WaitForExit();
@@ -653,34 +675,7 @@ namespace DMP_Regi_Adjustment_Program
             }
 
         }
-
-        private void Nail_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbx_Nail.Checked)
-            {
-                cbx_Photo.Checked = false;
-                EnableNail();
-                //Update();
-            }
-            else
-            {
-                DisableNail();
-            }
-        }
-        private void cbx_Photo_CheckedChanged(object sender, EventArgs e)
-        {
-            if (cbx_Photo.Checked)
-            {
-                cbx_Nail.Checked = false;
-                EnablePhoto();
-            }
-            else
-            {
-                DisablePhoto();
-            }
-
-        }
-
+       
         void EnableNail()
         {
             NailY_numericUpDown.Enabled = true;
@@ -724,6 +719,32 @@ namespace DMP_Regi_Adjustment_Program
             PhotoC_numericUpDown.Value = 0;
         }
 
+        private void rdb_Nail_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rdb_Nail.Checked)
+            {
+                rdb_Photo.Checked = false;
+                EnableNail();
+                //Update();
+            }
+            else
+            {
+                DisableNail();
+            }
+        }
+
+        private void rdb_Photo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rdb_Photo.Checked)
+            {
+                rdb_Nail.Checked = false;
+                EnablePhoto();
+            }
+            else
+            {
+                DisablePhoto();
+            }
+        }
 
         public Boolean SendImageViaBluetooth(String mac, bool isNailPaper)
         {
@@ -834,44 +855,62 @@ namespace DMP_Regi_Adjustment_Program
                                     switch (buffer[8])
                                     {
                                         case 0x01:
-                                            bluetoothError = "RIBBON REPLACE ERROR";
+                                            bluetoothError = "FW_UPDATE";
                                             break;
-                                        case 0x02:
-                                            bluetoothError = "RIBBON EMPTY";
-                                            break;
+
                                         case 0x03:
-                                            bluetoothError = "BUSY";
+                                            bluetoothError = "TPH_TEMP_HIGH";
                                             break;
                                         case 0x04:
-                                            bluetoothError = "PAPER MISFEED";
+                                            bluetoothError = "TPH_TEMP_LOW";
                                             break;
                                         case 0x05:
-                                            bluetoothError = "WRONG CUSTOMER";
+                                            bluetoothError = "ENGINE_PRINTING";
                                             break;
                                         case 0x06:
-                                            bluetoothError = "DATA ERROR";
+                                            bluetoothError = "ENGINE_COOLING";
                                             break;
                                         case 0x07:
-                                            bluetoothError = "CARTRIDGE EMPTY";
+                                            bluetoothError = "ENGINE_PREHEATING";
                                             break;
                                         case 0x08:
-                                            bluetoothError = "SYSTEM ERROR";
+                                            bluetoothError = "NOT_MATCH_RIBBON";
                                             break;
                                         case 0x09:
-                                            bluetoothError = "BATTERY LOW";
+                                            bluetoothError = "EMPTY_MEDIA";
                                             break;
-                                        case 0x0a:
-                                            bluetoothError = "HIGH TEMPERATURE";
-                                            break;
+                                        /*      case 0x0a:
+                                                  bluetoothError = "EMPTY_RIBBON";
+                                                  break;
+                                          */
                                         case 0x0b:
-                                            bluetoothError = "LOW TEMPERATURE";
+                                            bluetoothError = "NOT_INSERT_MEDIA";
                                             break;
                                         case 0x0c:
-                                            bluetoothError = "COOLING MODE";
+                                            bluetoothError = "NOT_INSERT_RIBBON";
                                             break;
                                         case 0x0d:
-                                            bluetoothError = "BATTERY TOO LOW";
+                                            bluetoothError = "HARDWARE_FAIL";
                                             break;
+                                        case 0x0f:
+                                            bluetoothError = "TOP_COVER_OPEN";
+                                            break;
+                                        case 0x10:
+                                            bluetoothError = "FRONT_COVER_OPEN";
+                                            break;
+                                        case 0x11:
+                                            bluetoothError = "MEDIA_CHECK";
+                                            break;
+                                        case 0x15:
+                                            bluetoothError = "PAPER_JAM_ERR";
+                                            break;
+                                        case 0x16:
+                                            bluetoothError = "PAPER_MISS_FEEDING";
+                                            break;
+                                        case 0x17:
+                                            bluetoothError = "PAPER_INIT_FAIL";
+                                            break;
+
                                     }
 
                                     result = false;
@@ -882,43 +921,60 @@ namespace DMP_Regi_Adjustment_Program
                                 switch (buffer[8])
                                 {
                                     case 0x01:
-                                        bluetoothError = "RIBBON REPLACE ERROR";
+                                        bluetoothError = "FW_UPDATE";
                                         break;
-                                    case 0x02:
-                                        bluetoothError = "RIBBON EMPTY";
-                                        break;
+
                                     case 0x03:
-                                        bluetoothError = "BUSY";
+                                        bluetoothError = "TPH_TEMP_HIGH";
                                         break;
                                     case 0x04:
-                                        bluetoothError = "PAPER MISFEED";
+                                        bluetoothError = "TPH_TEMP_LOW";
                                         break;
                                     case 0x05:
-                                        bluetoothError = "WRONG CUSTOMER";
+                                        bluetoothError = "ENGINE_PRINTING";
                                         break;
                                     case 0x06:
-                                        bluetoothError = "DATA ERROR";
+                                        bluetoothError = "ENGINE_COOLING";
                                         break;
                                     case 0x07:
-                                        bluetoothError = "CARTRIDGE EMPTY";
+                                        bluetoothError = "ENGINE_PREHEATING";
                                         break;
                                     case 0x08:
-                                        bluetoothError = "SYSTEM ERROR";
+                                        bluetoothError = "NOT_MATCH_RIBBON";
                                         break;
                                     case 0x09:
-                                        bluetoothError = "BATTERY LOW";
+                                        bluetoothError = "EMPTY_MEDIA";
                                         break;
-                                    case 0x0a:
-                                        bluetoothError = "HIGH TEMPERATURE";
-                                        break;
+                                    /*    case 0x0a:
+                                            bluetoothError = "EMPTY_RIBBON";
+                                            break;
+                                     */
                                     case 0x0b:
-                                        bluetoothError = "LOW TEMPERATURE";
+                                        bluetoothError = "NOT_INSERT_MEDIA";
                                         break;
                                     case 0x0c:
-                                        bluetoothError = "COOLING MODE";
+                                        bluetoothError = "NOT_INSERT_RIBBON";
                                         break;
                                     case 0x0d:
-                                        bluetoothError = "BATTERY TOO LOW";
+                                        bluetoothError = "HARDWARE_FAIL";
+                                        break;
+                                    case 0x0f:
+                                        bluetoothError = "TOP_COVER_OPEN";
+                                        break;
+                                    case 0x10:
+                                        bluetoothError = "FRONT_COVER_OPEN";
+                                        break;
+                                    case 0x11:
+                                        bluetoothError = "MEDIA_CHECK";
+                                        break;
+                                    case 0x15:
+                                        bluetoothError = "PAPER_JAM_ERR";
+                                        break;
+                                    case 0x16:
+                                        bluetoothError = "PAPER_MISS_FEEDING";
+                                        break;
+                                    case 0x17:
+                                        bluetoothError = "PAPER_INIT_FAIL";
                                         break;
                                 }
 

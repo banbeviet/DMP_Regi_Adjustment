@@ -261,7 +261,7 @@
             this.PrintNail_button.Name = "PrintNail_button";
             this.PrintNail_button.Size = new System.Drawing.Size(110, 42);
             this.PrintNail_button.TabIndex = 511;
-            this.PrintNail_button.Text = "Print Nail";
+            this.PrintNail_button.Text = "Print Regi Nail";
             this.PrintNail_button.UseVisualStyleBackColor = true;
             this.PrintNail_button.Click += new System.EventHandler(this.PrintNail_button_Click);
             // 
@@ -272,7 +272,7 @@
             this.PrintPhoto_button.Name = "PrintPhoto_button";
             this.PrintPhoto_button.Size = new System.Drawing.Size(126, 44);
             this.PrintPhoto_button.TabIndex = 512;
-            this.PrintPhoto_button.Text = "Print Photo";
+            this.PrintPhoto_button.Text = "Print Regi Photo";
             this.PrintPhoto_button.UseVisualStyleBackColor = true;
             this.PrintPhoto_button.Click += new System.EventHandler(this.PrintPhoto_button_Click);
             // 
@@ -469,7 +469,7 @@
             this.BTPrintNail_button.Name = "BTPrintNail_button";
             this.BTPrintNail_button.Size = new System.Drawing.Size(110, 37);
             this.BTPrintNail_button.TabIndex = 520;
-            this.BTPrintNail_button.Text = "BT Print Nail";
+            this.BTPrintNail_button.Text = "BT Print Nail FPQ";
             this.BTPrintNail_button.UseVisualStyleBackColor = true;
             this.BTPrintNail_button.Click += new System.EventHandler(this.BTPrintNail_button_Click);
             // 
@@ -497,7 +497,7 @@
             this.BTPrintPhoto_button.Name = "BTPrintPhoto_button";
             this.BTPrintPhoto_button.Size = new System.Drawing.Size(126, 37);
             this.BTPrintPhoto_button.TabIndex = 521;
-            this.BTPrintPhoto_button.Text = "BT Print Photo";
+            this.BTPrintPhoto_button.Text = "BT Print Photo FPQ";
             this.BTPrintPhoto_button.UseVisualStyleBackColor = true;
             this.BTPrintPhoto_button.Click += new System.EventHandler(this.BTPrintPhoto_button_Click);
             // 

@@ -78,6 +78,8 @@ namespace DMP_Regi_Adjustment_Program
         String bluetoothError = null;
         Boolean isManufacturingReset = false;
 
+        bool isNailRibbon = false;
+
         string BtMac;
         public Form1()
         {
@@ -105,19 +107,19 @@ namespace DMP_Regi_Adjustment_Program
                 }
             }
 
+            UsbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent; // 이벤트 핸들러 추가
+            UsbDeviceNotifier.Enabled = true;  // 장치인식하는 걸 안하게 하는거!!
+            UsbDevice.ForceLibUsbWinBack = true;
+
             readingProcess = new Process();
             readingProcess.StartInfo = new ProcessStartInfo
             {
-                FileName = Application.StartupPath + "\\dbgmon\\dbgmon.exe",
+                FileName = Application.StartupPath + "\\dbgmon.exe",
                 Arguments = "read.txt",
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
             readingProcess.Exited += readingProcess_Exited;
-
-            UsbDeviceNotifier.OnDeviceNotify += OnDeviceNotifyEvent; // 이벤트 핸들러 추가
-            UsbDeviceNotifier.Enabled = true;  // 장치인식하는 걸 안하게 하는거!!
-            UsbDevice.ForceLibUsbWinBack = true;
 
             thread = new Thread(StatusMonitor);
             CheckForIllegalCrossThreadCalls = false;
@@ -132,7 +134,6 @@ namespace DMP_Regi_Adjustment_Program
             BtMac = null;
             try
             {
-                //using (StreamReader reader = new StreamReader(new FileStream("dbgmon\\ds_AppManage.log", FileMode.Open)))
                 using (StreamReader reader = new StreamReader(new FileStream("ds_AppManage.log", FileMode.Open)))
                 {
                     Char[] delimeterChars = { ' ', '=', ',', '\t', '\"', '%', '(', ')', '|' };
@@ -158,10 +159,43 @@ namespace DMP_Regi_Adjustment_Program
                         }
                     }
                 }
+
+                using (StreamReader reader = new StreamReader(new FileStream("TestSpi.log", FileMode.Open)))
+                {
+                    Char[] delimeterChars = { ' ', '=', ',', '\t', '\"', '%', '(', ')', '|' };
+                    String[] strArray = null;
+
+                    while (!reader.EndOfStream)
+                    {
+                        strArray = reader.ReadLine().Split(delimeterChars, StringSplitOptions.RemoveEmptyEntries);
+
+                        try
+                        {
+                            for (Int32 i = 0; i < strArray.Length; i++)
+                            {
+                                if (strArray[i].Equals("Ribon") && strArray[i+1].Equals("Type"))
+                                {
+                                    var Ribbonvalue = strArray[i + 3];
+                                    if(Ribbonvalue == "1")
+                                    {
+                                        isNailRibbon = true;
+                                    }
+                                    else if(Ribbonvalue == "0") {
+                                        isNailRibbon = false;
+                                    }
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show("Error readingProcess (Read BT Mac) : " + ex.Message);
             }
         }
 
@@ -267,15 +301,18 @@ namespace DMP_Regi_Adjustment_Program
                         case PrinterStatus.USB_DISCONNECTED:
                             caption = "@DISCONNECT";
                             DeviceStatus_label.Text = "DISCONNECT";
+                            DBGMonStatus_label.Text = "---";
+                            BluetoothStatus_label.Text = "---";
                             break;
                         case PrinterStatus.USB_CONNECTED_FIRST:
                             caption = "@CONNECTED_FIRST";
+                            DeviceStatus_label.Text = "CONNECTED";
                             ParseAddressFirmware();
                             break;
                         case PrinterStatus.USB_CONNECTED_READY:
                             caption = "@CONNECTED_READY";
+                            DeviceStatus_label.Text = "CONNECTED";
                             DBGMonStatus_label.Text = "READY";
-                            //ParseAddressFirmware();
                             break;
 
                         default:
@@ -311,7 +348,34 @@ namespace DMP_Regi_Adjustment_Program
                 }
             }
         }
+        void GetCurrentColorValue()
+        {
+            if (sPrinterStatus != PrinterStatus.USB_DISCONNECTED)
+            {
+                using (FileStream fileStream = new System.IO.FileStream(Environment.CurrentDirectory + "\\dbgmon\\NAY.bin", FileMode.Open))
+                { Nail_Y = fileStream.ReadByte(); }
 
+                using (FileStream fileStream = new System.IO.FileStream(Environment.CurrentDirectory + "\\dbgmon\\NAM.bin", FileMode.Open))
+                { Nail_M = fileStream.ReadByte(); }
+
+                using (FileStream fileStream = new System.IO.FileStream(Environment.CurrentDirectory + "\\dbgmon\\NAC.bin", FileMode.Open))
+                { Nail_C = fileStream.ReadByte(); }
+
+                using (FileStream fileStream = new System.IO.FileStream(Environment.CurrentDirectory + "\\dbgmon\\PHM.bin", FileMode.Open))
+                { Photo_M = fileStream.ReadByte(); }
+
+                using (FileStream fileStream = new System.IO.FileStream(Environment.CurrentDirectory + "\\dbgmon\\PHC.bin", FileMode.Open))
+                { Photo_C = fileStream.ReadByte(); }
+
+                NailY_numericUpDown.Value = (decimal)Byte2StringData(Nail_Y);
+                NailM_numericUpDown.Value = (decimal)Byte2StringData(Nail_M);
+                NailC_numericUpDown.Value = (decimal)Byte2StringData(Nail_C);
+                PhotoM_numericUpDown.Value = (decimal)Byte2StringData(Photo_M);
+                PhotoC_numericUpDown.Value = (decimal)Byte2StringData(Photo_C);
+
+            }
+            else { }
+        }
         private void ParseAddressFirmware()
         {
             processDbgMon.StartInfo.FileName = ".\\dbgmon\\GetRegi.bat";
@@ -335,32 +399,8 @@ namespace DMP_Regi_Adjustment_Program
                     break;
                 }
             }
-			
-			if (sPrinterStatus != PrinterStatus.USB_DISCONNECTED)
-            {
-                using (FileStream fileStream = new System.IO.FileStream(Environment.CurrentDirectory + "\\dbgmon\\NAY.bin", FileMode.Open))
-                { Nail_Y = fileStream.ReadByte(); }
 
-                using (FileStream fileStream = new System.IO.FileStream(Environment.CurrentDirectory + "\\dbgmon\\NAM.bin", FileMode.Open))
-                { Nail_M = fileStream.ReadByte(); }
-
-                using (FileStream fileStream = new System.IO.FileStream(Environment.CurrentDirectory + "\\dbgmon\\NAC.bin", FileMode.Open))
-                { Nail_C = fileStream.ReadByte(); }
-
-                using (FileStream fileStream = new System.IO.FileStream(Environment.CurrentDirectory + "\\dbgmon\\PHM.bin", FileMode.Open))
-                { Photo_M = fileStream.ReadByte(); }
-
-                using (FileStream fileStream = new System.IO.FileStream(Environment.CurrentDirectory + "\\dbgmon\\PHC.bin", FileMode.Open))
-                { Photo_C = fileStream.ReadByte(); }
-
-                NailY_numericUpDown.Value = (decimal)Byte2StringData(Nail_Y);
-                NailM_numericUpDown.Value = (decimal)Byte2StringData(Nail_M);
-                NailC_numericUpDown.Value = (decimal)Byte2StringData(Nail_C);
-                PhotoM_numericUpDown.Value = (decimal)Byte2StringData(Photo_M);
-                PhotoC_numericUpDown.Value = (decimal)Byte2StringData(Photo_C);
-         
-            }
-            else { }
+            GetCurrentColorValue();
             sPrinterStatus = PrinterStatus.USB_CONNECTED_READY;
             //enable_works();
             Setting_groupBox.Enabled = true;
@@ -417,14 +457,26 @@ namespace DMP_Regi_Adjustment_Program
                 Debug.WriteLine("KillProcess error catch");
             }
         }
-
         
-
         private void PrintNail_button_Click(object sender, EventArgs e)
         {
-            if (sPrinterStatus == PrinterStatus.USB_CONNECTED_READY) { 
-            
+            BluetoothStatus_label.Text = "---";
+            BluetoothStatus_label.ForeColor = Color.Black;
+            //Clear ALl Log file
+            ClearAllLogFile();
 
+            readingProcess.EnableRaisingEvents = true;
+            readingProcess.Start();
+            readingProcess.WaitForExit();
+
+            if (isNailRibbon != true)
+            {
+                bluetoothError = "NOT MATCH RIBBON";
+                MessageBox.Show(bluetoothError);
+                return;
+            }
+
+            if (sPrinterStatus == PrinterStatus.USB_CONNECTED_READY) { 
                 processDbgMon.StartInfo.FileName = ".\\dbgmon\\PrintNail.bat";
                 processDbgMon.StartInfo.UseShellExecute = false;
                 processDbgMon.StartInfo.CreateNoWindow = true;
@@ -453,6 +505,22 @@ namespace DMP_Regi_Adjustment_Program
 
         private void PrintPhoto_button_Click(object sender, EventArgs e)
         {
+            BluetoothStatus_label.Text = "---";
+            BluetoothStatus_label.ForeColor = Color.Black;
+            //Clear ALl Log file
+            ClearAllLogFile();
+
+            readingProcess.EnableRaisingEvents = true;
+            readingProcess.Start();
+            readingProcess.WaitForExit();
+
+            if (isNailRibbon == true)
+            {
+                bluetoothError = "NOT MATCH RIBBON";
+                MessageBox.Show(bluetoothError);
+                return;
+            }
+
             if (sPrinterStatus == PrinterStatus.USB_CONNECTED_READY)
             {
                 processDbgMon.StartInfo.FileName = ".\\dbgmon\\PrintPhoto.bat";
@@ -627,53 +695,194 @@ namespace DMP_Regi_Adjustment_Program
             }
 
         }
-
+        void ClearAllLogFile()
+        {
+            foreach (string fileName in Directory.GetFiles(Application.StartupPath, "*.log"))
+            {
+                try
+                {
+                    File.Delete(fileName);
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+        }
         private void BTPrintPhoto_button_Click(object sender, EventArgs e)
         {
-            //hear insert msg wr ac_scratch20 52 
+            try
+            {
+                //hear insert msg wr ac_scratch20 52 
+                if (sPrinterStatus == PrinterStatus.USB_CONNECTED_READY)
+                {
+                    processDbgMon.StartInfo.FileName = ".\\dbgmon\\BTPrintPhoto.bat";
+                    processDbgMon.StartInfo.UseShellExecute = false;
+                    processDbgMon.StartInfo.CreateNoWindow = true;
+                    DBGMonStatus_label.Text = "BT Print Photo";
+                    processDbgMon.Start();
+                    while (!processDbgMon.HasExited)
+                    {
+                        if (sPrinterStatus == PrinterStatus.USB_DISCONNECTED)
+                        {
+                            try
+                            {
+                                processDbgMon.Kill();
+                                processDbgMon.Close();
+                            }
+                            catch
+                            {
+                                Debug.WriteLine("KillProcess error catch");
+                            }
+                            break;
+                        }
+                    }
+                    DBGMonStatus_label.Text = "";
+                    sPrinterStatus = PrinterStatus.USB_CONNECTED_READY;
+                }
+                //Clear ALl Log file
+                ClearAllLogFile();
 
-            readingProcess.EnableRaisingEvents = true;
-            readingProcess.Start();
-            readingProcess.WaitForExit();
-            SendImageViaBluetooth(BtMac, false);
+                readingProcess.EnableRaisingEvents = true;
+                readingProcess.Start();
+                readingProcess.WaitForExit();
+
+                if(isNailRibbon == true)
+                {
+                    bluetoothError = "NOT MATCH RIBBON";
+                    MessageBox.Show(bluetoothError);
+                    Invoke(new Action(delegate ()
+                    {
+                        BluetoothStatus_label.Text = bluetoothError;
+                        BluetoothStatus_label.ForeColor = Color.Red;
+                        Update();
+                    }));
+                    return;
+                }
+
+                if (SendImageViaBluetooth(BtMac, false))
+                {
+                    Invoke(new Action(delegate ()
+                    {
+                        BluetoothStatus_label.Text = "PASS";
+                        BluetoothStatus_label.ForeColor = Color.Green;
+                        Update();
+                    }));
+                }
+                else
+                {
+                    if (bluetoothError == null)
+                        bluetoothError = "UNKNOWN ERROR";
+
+                    Invoke(new Action(delegate ()
+                    {
+                        BluetoothStatus_label.Text = bluetoothError;
+                        BluetoothStatus_label.ForeColor = Color.Red;
+                        Update();
+                    }));
+
+                    Invoke(new Action(delegate ()
+                    {
+                        MessageBox.Show(bluetoothError);
+                    }));
+
+
+                    bluetoothError = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                //throw;
+            }
         }
 
         private void BTPrintNail_button_Click(object sender, EventArgs e)
         {
-            //hear insert msg add to "wr ac_scratch20 52" 
-            readingProcess.EnableRaisingEvents = true;
-            readingProcess.Start();
-            readingProcess.WaitForExit();
-            if (SendImageViaBluetooth(BtMac,true))
+            try
             {
-                Invoke(new Action(delegate ()
+                //hear insert msg add to "wr ac_scratch20 52"
+                if (sPrinterStatus == PrinterStatus.USB_CONNECTED_READY)
                 {
-                    BluetoothStatus_label.Text = "PASS";
-                    BluetoothStatus_label.ForeColor = Color.Green;
-                    Update();
-                }));
-            }
-            else
-            {
-                if (bluetoothError == null)
-                    bluetoothError = "UNKNOWN ERROR";
+                    processDbgMon.StartInfo.FileName = ".\\dbgmon\\BTPrintNail.bat";
+                    processDbgMon.StartInfo.UseShellExecute = false;
+                    processDbgMon.StartInfo.CreateNoWindow = true;
+                    DBGMonStatus_label.Text = "BT Print Nail";
+                    processDbgMon.Start();
+                    while (!processDbgMon.HasExited)
+                    {
+                        if (sPrinterStatus == PrinterStatus.USB_DISCONNECTED)
+                        {
+                            try
+                            {
+                                processDbgMon.Kill();
+                                processDbgMon.Close();
+                            }
+                            catch
+                            {
+                                Debug.WriteLine("KillProcess error catch");
+                            }
+                            break;
+                        }
+                    }
+                    DBGMonStatus_label.Text = "";
+                    sPrinterStatus = PrinterStatus.USB_CONNECTED_READY;
+                }
+                //Clear ALl Log file
+                ClearAllLogFile();
 
-                Invoke(new Action(delegate ()
-                {
-                    BluetoothStatus_label.Text = bluetoothError;
-                    BluetoothStatus_label.ForeColor = Color.Red;
-                    Update();
-                }));
+                readingProcess.EnableRaisingEvents = true;
+                readingProcess.Start();
+                readingProcess.WaitForExit();
 
-                Invoke(new Action(delegate ()
+                if (isNailRibbon != true)
                 {
+                    bluetoothError = "NOT MATCH RIBBON";
                     MessageBox.Show(bluetoothError);
-                }));
+                    Invoke(new Action(delegate ()
+                    {
+                        BluetoothStatus_label.Text = bluetoothError;
+                        BluetoothStatus_label.ForeColor = Color.Red;
+                        Update();
+                    }));
+                    return;
+                }
+
+                if (SendImageViaBluetooth(BtMac, true))
+                {
+                    Invoke(new Action(delegate ()
+                    {
+                        BluetoothStatus_label.Text = "PASS";
+                        BluetoothStatus_label.ForeColor = Color.Green;
+                        Update();
+                    }));
+                }
+                else
+                {
+                    if (bluetoothError == null)
+                        bluetoothError = "UNKNOWN ERROR";
+
+                    Invoke(new Action(delegate ()
+                    {
+                        BluetoothStatus_label.Text = bluetoothError;
+                        BluetoothStatus_label.ForeColor = Color.Red;
+                        Update();
+                    }));
+
+                    Invoke(new Action(delegate ()
+                    {
+                        MessageBox.Show(bluetoothError);
+                    }));
 
 
-                bluetoothError = null;
+                    bluetoothError = null;
+                }
             }
-
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+                //throw;
+            }
         }
        
         void EnableNail()
@@ -723,6 +932,7 @@ namespace DMP_Regi_Adjustment_Program
         {
             if (rdb_Nail.Checked)
             {
+                GetCurrentColorValue();
                 rdb_Photo.Checked = false;
                 EnableNail();
                 //Update();
@@ -737,6 +947,7 @@ namespace DMP_Regi_Adjustment_Program
         {
             if (rdb_Photo.Checked)
             {
+                GetCurrentColorValue();
                 rdb_Nail.Checked = false;
                 EnablePhoto();
             }
